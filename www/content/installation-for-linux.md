@@ -87,5 +87,3 @@ minikube   Ready     master    53m       v1.10.0
 ```
 
 Awesome! You're now running Kubernetes on your Linux.
-
-Next check the [Istio installation guide »]({{< ref "install-istio.md" >}})
