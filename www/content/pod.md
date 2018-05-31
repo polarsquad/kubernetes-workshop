@@ -1,6 +1,6 @@
 ---
 title: Pod
-weight: 10
+weight: 20
 menu: true
 ---
 
@@ -12,16 +12,18 @@ Each pod has its own IP, Hostname, processes etc. running a single application a
 
 Pods are spread out on different worker nodes.
 
+Good practise is to have frontend and backend containers in different pods. This way utilization of your infrastructure is more efficient.
+
 ```shell
 
-workshop $ kubectl apply -f https://polarsquad.github.io/kubernetes-workshop/examples/pod.yaml
+workshop $ kubectl create -f examples/pod.yaml
 pod "example-app" created
 
 workshop $ kubectl get pods
 NAME                       READY     STATUS    RESTARTS   AGE
-example-app-f6h54   1/1         Running   0          19s
+example-app   1/1         Running   0          19s
 
-workshop $ kubectl delete -f https://polarsquad.github.io/kubernetes-workshop/examples/pod.yaml
+workshop $ kubectl delete -f examples/pod.yaml
 pod "example-app" deleted
 
 ```
