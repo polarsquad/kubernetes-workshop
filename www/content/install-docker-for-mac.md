@@ -32,4 +32,3 @@ docker-for-desktop   Ready     master    3m        v1.9.6
 
 Brilliant! You're now running Kubernetes on your Mac.
 
-Next check the [Istio installation guide »]({{< ref "install-istio.md" >}})
