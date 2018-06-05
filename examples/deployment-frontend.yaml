@@ -1,37 +1,40 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-svc
+  name: frontend
   labels:
-    app: backend
+    app: frontend
 spec:
   ports:
-  - port: 6000
-    targetPort: 6000
+  - port: 5000
+    targetPort: 5000
     protocol: TCP
     name: http
   selector:
-    app: backend
+    app: frontend
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: backend-v2
+  name: frontend
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: backend
+        app: frontend
         version: v2
     spec:
       containers:
-      - name: backend
-        image: polarsquad/example-backend:v2
+      - name: frontend
+        image: polarsquad/example-frontend:v2
         imagePullPolicy: IfNotPresent
+        env:
+        - name: BACKEND_HOST
+          value: backend-svc
         resources:
           requests:
             cpu: 100m
         ports:
-        - containerPort: 6000
+        - containerPort: 5000
