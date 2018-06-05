@@ -32,7 +32,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: BACKEND_HOST
-          value: backend-svc
+          value: backend
         resources:
           requests:
             cpu: 100m

@@ -1,5 +1,5 @@
 ---
-title: ReplicaSet
+title: ReplicaSet, Services and LoadBalancer
 weight: 30
 menu: true
 ---
@@ -68,6 +68,35 @@ workshop $ kubectl get pods
 workshop $ kubectl scale rs kubers --replicas=3
 
 ```
+
+
+## Services
+
+
+kubectl create -f examples/service.yaml
+kubectl get services
+
+
+Run command in side pod
+$ kubectl exec kubers-6n4kz -- curl -s http://10.96.206.237
+$ kubectl exec kubers-6n4kz env                                              # Listing environment variables from pod
+$ kubectl exec kubers-6n4kz bash                                       # Running Bash inside pod
+
+
+
+## Load Balancer
+
+
+kubectl create -f examples/loadbalancer.yaml
+
+
+
+
+
+
+
+## Delete what we have created
+
 
 Delete ReplicaSet
 
