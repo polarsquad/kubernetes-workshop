@@ -72,23 +72,68 @@ workshop $ kubectl scale rs kubers --replicas=3
 
 ## Services
 
-
-kubectl create -f examples/service.yaml
-kubectl get services
+Service is a resource and created to make single point of entry to group of pods providing for example same frontend services.
 
 
-Run command in side pod
-$ kubectl exec kubers-6n4kz -- curl -s http://10.96.206.237
-$ kubectl exec kubers-6n4kz env                                              # Listing environment variables from pod
-$ kubectl exec kubers-6n4kz bash                                       # Running Bash inside pod
+```shell
 
+workshop $ kubectl create -f examples/service.yaml
+
+workshop $ kubectl get svc
+
+
+```
+
+Service is not yet available to external clients. Ping fails.
+
+```shell
+
+workshop $ curl localhost:8080
+curl: (7) Failed to connect to localhost port 8080: Connection refused
+
+```
+
+Service is running and checking that pinging is possible within cluster. Curl command is performed inside Pod towards Service. Service redirects connection to frontend pod and http response is given back.
+
+
+```shell
+
+workshop $ kubectl get pods
+
+workshop $ kubectl get services kubers
+
+workshop $ kubectl exec kubers-6n4kz -- curl -s http://10.96.206.237
+
+
+```
+
+Running commands inside container.
+
+```shell
+
+
+workshop $ kubectl exec kubers-6n4kz env 
+
+workshop $ kubectl exec kubers-6n4kz bash
+
+```
 
 
 ## Load Balancer
 
+Services can be exposed to external client by using Load Balancer. LoadBalancer redirects traffic to the node port across all the nodes. Clients can connect to the service through the load balancer's IP.
 
-kubectl create -f examples/loadbalancer.yaml
 
+```shell
+
+workshop $ kubectl create -f examples/loadbalancer.yaml
+
+workshop $ kubectl get svc kubers-loadbalancer
+
+workshop $ curl localhost
+
+
+```
 
 
 
@@ -102,10 +147,13 @@ Delete ReplicaSet
 
 ```shell
 
-workshop $ kubectl delete rs replicaset-example
+workshop $ kubectl delete rs kubers
+workshop $ kubectl delete svc kubers-loadbalancer
 
 workshop $ kubectl get pods
 
 workshop $ kubectl get rs
+
+workshop $ kubectl get svc
 
 ```
