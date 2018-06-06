@@ -4,6 +4,12 @@ weight: 30
 menu: true
 ---
 
+In this example we have Node.js web application which accept's HTTP requests and responses with the hostname of the machine it is running in.
+
+The directory [apps/kubers/](https://github.com/polarsquad/kubernetes-workshop/tree/master/apps/kubers) in the workshop Git repo contains the Node.JS source code for the apps, Dockerfile to build the Docker images, and Kubernetes deployment configuration files. You can find pre-built images from [Polar Squad Docker Hub](https://hub.docker.com/r/polarsquad/kubers/)
+
+
+
 ReplicaSet
 
 Usually one does not create pods directly but create other resources like ReplicaSet's which creates and manages pods.
@@ -69,10 +75,12 @@ workshop $ kubectl scale rs kubers --replicas=3
 
 ```
 
+ReplicaSet is controlling 3 Pods but Pods are not yet available for external use.
+
 
 ## Services
 
-Service is a resource and created to make single point of entry to group of pods providing for example same frontend services.
+Service is a resource created for example to make single point of entry to group of pods providing same frontend services.
 
 
 ```shell
@@ -84,7 +92,7 @@ workshop $ kubectl get svc
 
 ```
 
-Service is not yet available to external clients. Ping fails.
+Service is not yet available to external clients. Curl fails.
 
 ```shell
 
@@ -93,7 +101,9 @@ curl: (7) Failed to connect to localhost port 8080: Connection refused
 
 ```
 
-Service is running and checking that pinging is possible within cluster. Curl command is performed inside Pod towards Service. Service redirects connection to frontend pod and http response is given back.
+But service is running and you can check that requests are possible to make within cluster. Curl command is performed inside Pod towards Service. Service redirects connection to frontend Pod and http response is given back by the Pod.
+
+Remember to check correct IP from Services and correct Pod id:
 
 
 ```shell
@@ -104,17 +114,6 @@ workshop $ kubectl get services kubers
 
 workshop $ kubectl exec kubers-6n4kz -- curl -s http://10.96.206.237
 
-
-```
-
-Running commands inside container.
-
-```shell
-
-
-workshop $ kubectl exec kubers-6n4kz env 
-
-workshop $ kubectl exec kubers-6n4kz bash
 
 ```
 
@@ -131,11 +130,15 @@ workshop $ kubectl create -f examples/loadbalancer.yaml
 workshop $ kubectl get svc kubers-loadbalancer
 
 workshop $ curl localhost
+You've hit pod kubers-2t9nx
+
+workshop $ curl localhost
+You've hit pod kubers-l57z4
 
 
 ```
 
-
+External access through LoadBalancer should work now and when sending request to your service you should get responces from all three pods.
 
 
 
@@ -148,6 +151,7 @@ Delete ReplicaSet
 ```shell
 
 workshop $ kubectl delete rs kubers
+workshop $ kubectl delete svc kubers
 workshop $ kubectl delete svc kubers-loadbalancer
 
 workshop $ kubectl get pods
