@@ -1,14 +1,14 @@
 APP_NAME = polarsquad/kubers
 
-all: v1
+all: build
 
-v1:
+build:
 	docker build -t $(APP_NAME) .
 
 clean:
 	docker rmi $(APP_NAME)
 
-.PHONY: all clean v1
+.PHONY: all clean build
 
-publish: v1
+publish: build
 	docker push $(APP_NAME)
