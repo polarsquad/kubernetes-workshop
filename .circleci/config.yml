@@ -33,6 +33,36 @@ jobs:
       - run: make setup
       - run: make publish
 
+  apps:build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: apk update && apk add make
+
+      - setup_remote_docker
+
+      - run:
+          name: Build images
+          command: |
+            (cd apps/kubers && make all)
+
+  apps:publish:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: apk update && apk add make
+
+      - setup_remote_docker
+
+      - run:
+          name: Login Docker hub
+          command: echo $DOCKER_PASS | docker login --username $DOCKER_USER --password-stdin
+
+      - run:
+          name: Publish images
+          command: |
+            (cd apps/kubers && make publish)
+
 workflows:
   version: 2
   site:
