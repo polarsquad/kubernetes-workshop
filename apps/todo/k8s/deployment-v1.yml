@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todoapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todoapp
+  template:
+    metadata:
+      labels:
+        app: todoapp
+        version: stable
+    spec:
+      containers:
+      - name: todoapp
+        image: polarsquad/todoapp-demo
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REDIS_ADDRESS
+          value: "redis:6379"
+        resources:
+          requests:
+            cpu: 100m
+        ports:
+        - containerPort: 8080
+          name: todoapp
