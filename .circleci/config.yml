@@ -81,3 +81,17 @@ workflows:
             branches:
               ignore: /gh-pages/
               only: /master/
+  apps:
+    jobs:
+      - apps:build:
+          filters:
+            branches:
+              ignore: /gh-pages/
+      - apps:publish:
+          context: DockerHub
+          requires:
+            - apps:build
+          filters:
+            branches:
+              ignore: /gh-pages/
+              only: /master/
