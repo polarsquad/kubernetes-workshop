@@ -45,6 +45,7 @@ jobs:
           name: Build images
           command: |
             (cd apps/kubers && make all)
+            (cd apps/todo && make all)
 
   apps:publish:
     <<: *defaults
@@ -62,6 +63,7 @@ jobs:
           name: Publish images
           command: |
             (cd apps/kubers && make publish)
+            (cd apps/todo && make publish)
 
 workflows:
   version: 2
