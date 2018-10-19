@@ -110,7 +110,7 @@ metadata:
   labels:
     app: cluster-autoscaler
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: cluster-autoscaler
@@ -155,7 +155,7 @@ spec:
             - --stderrthreshold=info
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,KubernetesCluster/k8s.polarsquad.com
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled
             - --logtostderr=true
           env:
             - name: AWS_REGION
