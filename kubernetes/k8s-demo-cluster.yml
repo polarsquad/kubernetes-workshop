@@ -2,6 +2,7 @@ import:
   - dex-secrets.yml
 global:
   cluster_domain: k8s-demo.polarsquad.com
+  cluster_api_url: https://api.k8s.polarsquad.com
 include:
   - name: dex
   - name: cert-manager

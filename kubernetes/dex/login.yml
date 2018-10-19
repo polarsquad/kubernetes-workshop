@@ -45,7 +45,7 @@ spec:
       containers:
       - image: "quay.io/yldio/kubernetes-auth:1.2.2"
         name: kubernetes-auth
-        command: ["/usr/local/bin/k8s-auth", "--listen", "http://0.0.0.0:5555", "--issuer", "https://auth.{{ .cluster_domain }}", "--redirect-uri", "https://login.{{ .cluster_domain }}/callback", "--api-server", "https://{{ .cluster_domain }}:6443", "--cluster", "{{ .cluster_domain }}", "--client-id", "kubernetes-auth", "--client-secret", "{{ .dex_auth_ui_secret }}", "--kubernetes-client-id", "kubernetes-auth", "--kubernetes-client-secret", "{{ .dex_auth_ui_secret }}"]
+        command: ["/usr/local/bin/k8s-auth", "--listen", "http://0.0.0.0:5555", "--issuer", "https://auth.{{ .cluster_domain }}", "--redirect-uri", "https://login.{{ .cluster_domain }}/callback", "--api-server", "{{ .cluster_api_url }}", "--cluster", "{{ .cluster_domain }}", "--client-id", "kubernetes-auth", "--client-secret", "{{ .dex_auth_ui_secret }}", "--kubernetes-client-id", "kubernetes-auth", "--kubernetes-client-secret", "{{ .dex_auth_ui_secret }}"]
         resources:
           limits:
             cpu: 100m
