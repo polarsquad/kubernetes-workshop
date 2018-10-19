@@ -1,0 +1,104 @@
+#
+# kubernetes-auth (https://github.com/yldio/kubernetes-auth) provides login UI for the Dex
+# 
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubernetes-auth
+  namespace: dex
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: psp:restricted:kubernetes-auth
+  namespace: dex
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: psp:restricted
+subjects:
+  - kind: ServiceAccount
+    name: kubernetes-auth
+    namespace: dex
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-auth
+  namespace: dex
+  labels:
+    app: kubernetes-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-auth
+  template:
+    metadata:
+      labels:
+        app: kubernetes-auth
+    spec:
+      serviceAccountName: kubernetes-auth
+      containers:
+      - image: "quay.io/yldio/kubernetes-auth:1.2.2"
+        name: kubernetes-auth
+        command: ["/usr/local/bin/k8s-auth", "--listen", "http://0.0.0.0:5555", "--issuer", "https://auth.{{ .cluster_domain }}", "--redirect-uri", "https://login.{{ .cluster_domain }}/callback", "--api-server", "https://{{ .cluster_domain }}:6443", "--cluster", "{{ .cluster_domain }}", "--client-id", "kubernetes-auth", "--client-secret", "{{ .dex_auth_ui_secret }}", "--kubernetes-client-id", "kubernetes-auth", "--kubernetes-client-secret", "{{ .dex_auth_ui_secret }}"]
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+        ports:
+        - name: http
+          containerPort: 5555
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-auth
+  namespace: dex
+spec:
+  selector:
+    app: kubernetes-auth
+  ports:
+  - name: http
+    port: 80
+    targetPort: 5555
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubernetes-auth
+  namespace: dex
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - login.{{ .cluster_domain }}
+    secretName: kubernetes-auth-tls
+  rules:
+  - host: login.{{ .cluster_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: kubernetes-auth
+          servicePort: http

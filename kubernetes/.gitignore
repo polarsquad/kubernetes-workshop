@@ -1,0 +1,2 @@
+# We don't want to store secrets in version control
+dex-secrets.yml

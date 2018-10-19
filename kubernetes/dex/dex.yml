@@ -1,0 +1,245 @@
+# 
+# Dex (https://github.com/dexidp/dex) adds support for having multiple authentication providers
+# 
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dex
+  namespace: dex
+  labels:
+    app: dex
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: psp:restricted:dex
+  namespace: dex
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: psp:restricted
+subjects:
+  - kind: ServiceAccount
+    name: dex
+    namespace: dex
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: dex
+  namespace: dex
+rules:
+- apiGroups: ["dex.coreos.com"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["create"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: dex
+  namespace: dex
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dex
+subjects:
+- kind: ServiceAccount
+  name: dex
+  namespace: dex
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dex
+  namespace: dex
+type: Opaque
+data:
+  github-client-id: {{ print .dex_github_client_id | b64enc | quote }}
+  github-client-secret: {{ print .dex_github_client_secret | b64enc | quote }}
+  google-client-id: {{ print .dex_google_client_id | b64enc | quote }}
+  google-client-secret: {{ print .dex_google_client_secret | b64enc | quote }}
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dex
+  namespace: dex
+data:
+  config.yaml: |
+    issuer: https://auth.{{ .cluster_domain }}
+    storage:
+      type: kubernetes
+      config:
+        inCluster: true
+    web:
+      http: 0.0.0.0:5556
+    telemetry:
+      http: 0.0.0.0:5558
+    
+    oauth2:
+      skipApprovalScreen: true
+
+    staticClients:
+    # For kube-apiserver to validate authentication
+    - id: kube-apiserver
+      name: 'Kubernetes apiserver'
+
+    # For the kubernetes-auth login page
+    - id: kubernetes-auth
+      name: 'Kubernetes authentication'
+      redirectURIs:
+        - https://login.{{ .cluster_domain }}/callback
+      secret: {{ .dex_auth_ui_secret }}
+
+    connectors:
+    - name: GitHub
+      id: github
+      type: github
+      config:
+        clientID: $GITHUB_CLIENT_ID
+        clientSecret: $GITHUB_CLIENT_SECRET
+        redirectURI: https://auth.{{ .cluster_domain }}/callback
+      orgs:
+      - name: reaktor
+
+    - id: google
+      name: Google
+      type: oidc
+      config:
+        issuer: https://accounts.google.com
+        clientID: $GOOGLE_CLIENT_ID
+        clientSecret: $GOOGLE_CLIENT_SECRET
+        redirectURI: https://auth.{{ .cluster_domain }}/callback
+        hostedDomains:
+        - polarsquad.com
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dex
+  namespace: dex
+  labels:
+    app: dex
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dex
+    spec:
+      serviceAccountName: dex
+      containers:
+      - name: dex
+        image: quay.io/dexidp/dex:v2.10.0
+        imagePullPolicy: IfNotPresent
+        command:
+        - /usr/local/bin/dex
+        - serve
+        - /etc/dex/cfg/config.yaml
+        ports:
+        - name: http
+          containerPort: 5556
+        - name: metrics
+          containerPort: 5558
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        volumeMounts:
+        - name: config
+          mountPath: /etc/dex/cfg
+        env:
+        - name: GITHUB_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: dex
+              key: github-client-id
+        - name: GITHUB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: dex
+              key: github-client-secret
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: dex
+              key: google-client-id
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: dex
+              key: google-client-secret
+      volumes:
+      - name: config
+        configMap:
+          name: dex
+          items:
+          - key: config.yaml
+            path: config.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex
+  namespace: dex
+  labels:
+    app: dex
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '5558'
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 5556
+    - name: metrics
+      port: 5558
+      protocol: TCP
+      targetPort: 5558
+  selector:
+    app: dex
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dex
+  namespace: dex
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - auth.{{ .cluster_domain }}
+    secretName: dex-tls
+  rules:
+  - host: auth.{{ .cluster_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: dex
+          servicePort: 80
