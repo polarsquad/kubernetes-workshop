@@ -7,3 +7,4 @@ include:
   - name: cert-manager
   - name: ingress-nginx
   - name: metrics-server
+  - name: cluster-autosacler
