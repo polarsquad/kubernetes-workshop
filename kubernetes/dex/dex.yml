@@ -93,8 +93,8 @@ data:
     - id: kube-apiserver
       name: 'Kubernetes apiserver'
 
-    # For the kubernetes-auth login page
-    - id: kubernetes-auth
+    # For the kubernetes
+    - id: kubernetes
       name: 'Kubernetes authentication'
       redirectURIs:
         - https://login.{{ .cluster_domain }}/callback
