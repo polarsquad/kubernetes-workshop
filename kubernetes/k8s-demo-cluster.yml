@@ -4,6 +4,7 @@ global:
   cluster_domain: k8s-demo.polarsquad.com
   cluster_api_url: https://api.k8s.polarsquad.com
 include:
+  - name: permissions
   - name: dex
   - name: cert-manager
   - name: ingress-nginx
