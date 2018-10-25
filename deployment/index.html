@@ -1,0 +1,144 @@
+
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Deployment &middot; Kubernetes Workshop</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		
+		<meta http-equiv="content-language" content="en-us" />
+		<meta name="generator" content="Hugo 0.49.2" />
+		<link rel="stylesheet" href="https://polarsquad.github.io/kubernetes-workshop/css/index.css">
+		<link rel="shortcut icon" href="https://polarsquad.github.io/kubernetes-workshop/favicon.ico" type="image/x-icon">
+	</head>
+
+	<body>
+		<div class="Wrapper">
+			<div class="Container">
+				<div class="Header">
+  <a href="https://polarsquad.github.io/kubernetes-workshop/">
+	<div class="Title center">
+		
+		<img alt="Kubernetes Workshop Logo" src="https://static1.squarespace.com/static/5a21331232601e557c5feacb/t/5abb77bb562fa7acbffc891e/1522238007350/?format=1500w" height="140" />
+		
+		<span class="text">Kubernetes Workshop</span>
+		<span class="subtext"></span>
+	</div>
+  </a>
+</div>
+
+				<div class="Content-wrapper">
+					<div class="Sidebar">
+	<div class="Menu">
+		<div class="item">
+			<a href="https://polarsquad.github.io/kubernetes-workshop/">Home</a>
+		</div>
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/introduction/">Introduction</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/installation/">Install Kubernetes</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/pod/">Pod</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/replicaset/">ReplicaSet, Services and LoadBalancer</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/deployment/">Deployment</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/useful-links/">Useful Links</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+		
+	</div>
+</div>
+
+					<div class="Content">
+						
+	<div class="Page" id="">
+		<h1>Deployment</h1>
+		<p>Deployment</p>
+
+<p>Deployment is used for higher-level resource to deploy applications and update them declaratively.</p>
+
+<p>Creating Deployment a ReplicaSet resource is created &ldquo;underneath&rdquo;. Actual pods are created and managed by ReplicaSets not by Deployment directly.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl apply -f examples/deployment-frontend.yaml
+service <span style="color:#f1fa8c">&#34;frontend&#34;</span> created
+
+workshop $ kubectl apply -f examples/deployment-backend.yaml 
+service <span style="color:#f1fa8c">&#34;backend&#34;</span> created
+
+workshop $ kubectl get deployments
+NAME       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+backend    <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>            <span style="color:#bd93f9">1</span>           32s
+frontend   <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>            <span style="color:#bd93f9">1</span>           36s
+
+
+workshop $ kubectl rollout status deployment frontend
+deployment <span style="color:#f1fa8c">&#34;frontend&#34;</span> successfully rolled out
+
+workshop $ kubectl rollout status deployment backend
+deployment <span style="color:#f1fa8c">&#34;backend&#34;</span> successfully rolled out
+
+workshop $ kubectl get pods -o wide
+NAME                        READY     STATUS    RESTARTS   AGE       IP           NODE
+backend-759bc76ddc-czxlp    <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          2m        <span style="color:#bd93f9">10</span>.1.0.182   docker-for-desktop
+frontend-589b8768cf-z9x7l   <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          2m        <span style="color:#bd93f9">10</span>.1.0.181   docker-for-desktop
+
+workshop $ kubectl delete deployment backend
+workshop $ kubectl delete deployment frontend</code></pre></div>
+	</div>
+
+						<div class="Footer">Made with ❤️ by Polar Squad. Content on this site is licensed under a Creative Commons license</div>
+<script src="https://polarsquad.github.io/kubernetes-workshop/js/index.js"></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-xxxx-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+					</div>
+				</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/introduction/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/installation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/install-docker-for-mac/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/installation-for-linux/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/pod/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/replicaset/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/deployment/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/useful-links/</loc>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://polarsquad.github.io/kubernetes-workshop/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

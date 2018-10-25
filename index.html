@@ -1,0 +1,329 @@
+
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Kubernetes Workshop</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		
+		<meta http-equiv="content-language" content="en-us" />
+		<meta name="generator" content="Hugo 0.49.2" />
+		<link rel="stylesheet" href="https://polarsquad.github.io/kubernetes-workshop/css/index.css">
+		<link rel="shortcut icon" href="https://polarsquad.github.io/kubernetes-workshop/favicon.ico" type="image/x-icon">
+	</head>
+
+	<body>
+		<div class="Wrapper">
+			<div class="Container">
+				<div class="Header">
+  <a href="https://polarsquad.github.io/kubernetes-workshop/">
+	<div class="Title center">
+		
+		<img alt="Kubernetes Workshop Logo" src="https://static1.squarespace.com/static/5a21331232601e557c5feacb/t/5abb77bb562fa7acbffc891e/1522238007350/?format=1500w" height="140" />
+		
+		<span class="text">Kubernetes Workshop</span>
+		<span class="subtext"></span>
+	</div>
+  </a>
+</div>
+
+				<div class="Content-wrapper">
+					<div class="Sidebar">
+	<div class="Menu">
+		<div class="item">
+			<a href="https://polarsquad.github.io/kubernetes-workshop/">Home</a>
+		</div>
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/introduction/">Introduction</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/installation/">Install Kubernetes</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/pod/">Pod</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/replicaset/">ReplicaSet, Services and LoadBalancer</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/deployment/">Deployment</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/useful-links/">Useful Links</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+		
+	</div>
+</div>
+
+					<div class="Content">
+						
+  
+  
+	
+		<div class="Page" id="Introduction">
+			<h1><a href="https://polarsquad.github.io/kubernetes-workshop/introduction/">Introduction</a></h1>
+			<p>This <a href="https://github.com/polarsquad/kubernetes-workshop">Kubernetes workshop</a> goal is to teach reader
+basics of <a href="https://kubernetes.io">Kubernetes</a> and how you can use it.</p>
+
+<p>Start by cloning the workshop material</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git clone https://github.com/polarsquad/kubernetes-workshop</code></pre></div>
+	</div>
+	
+	
+	
+		<div class="Page" id="Install Kubernetes">
+			<h1><a href="https://polarsquad.github.io/kubernetes-workshop/installation/">Install Kubernetes</a></h1>
+			<p>We will start installing <a href="https://kubernetes.io">Kubernetes</a>.
+There&rsquo;s multiple ways to run Kubernetes, select what suites best for you.</p>
+
+	</div>
+	
+	
+	
+	
+	
+	
+	
+		<div class="Page" id="Pod">
+			<h1><a href="https://polarsquad.github.io/kubernetes-workshop/pod/">Pod</a></h1>
+			<p>Pod</p>
+
+<p>Pod is a group of one or more tightly related containers that will run together on the same worker node and in the same Linux namespace(s).</p>
+
+<p>Each pod has its own IP, Hostname, processes etc. running a single application and/or additional supporting processes, each running in its own container.</p>
+
+<p>Pods are spread out on different worker nodes.</p>
+
+<p>Good practise is to have frontend and backend containers in different pods. This way utilization of your infrastructure is more efficient.</p>
+
+<p>Example pod:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#6272a4">#example pod</span>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-app
+spec:
+  containers:
+  - name: example-app
+    image: nginx:<span style="color:#bd93f9">1.7</span>.<span style="color:#bd93f9">9</span>
+    ports:
+    - containerPort: <span style="color:#bd93f9">80</span></code></pre></div>
+<p>Creating Pod from example yaml.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl create -f examples/pod.yaml
+pod <span style="color:#f1fa8c">&#34;example-app&#34;</span> created
+
+workshop $ kubectl get pods
+NAME                       READY     STATUS    RESTARTS   AGE
+example-app   <span style="color:#bd93f9">1</span>/1         Running   <span style="color:#bd93f9">0</span>          19s</code></pre></div>
+<p>Examining and Running commands inside container.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl <span style="color:#8be9fd;font-style:italic">exec</span> example-app env
+
+workshop $ kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -it example-app bash</code></pre></div>
+<p>Deleting Pod</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl get pods
+NAME                       READY     STATUS    RESTARTS   AGE
+example-app   <span style="color:#bd93f9">1</span>/1         Running   <span style="color:#bd93f9">0</span>          19s
+
+workshop $ kubectl delete -f examples/pod.yaml
+pod <span style="color:#f1fa8c">&#34;example-app&#34;</span> deleted</code></pre></div>
+	</div>
+	
+	
+	
+		<div class="Page" id="ReplicaSet, Services and LoadBalancer">
+			<h1><a href="https://polarsquad.github.io/kubernetes-workshop/replicaset/">ReplicaSet, Services and LoadBalancer</a></h1>
+			
+
+<p>In this example we have Node.js web application which accept&rsquo;s HTTP requests and responses with the hostname of the machine it is running in.</p>
+
+<p>The directory <a href="https://github.com/polarsquad/kubernetes-workshop/tree/master/apps/kubers">apps/kubers/</a> in the workshop Git repo contains the Node.JS source code for the apps, Dockerfile to build the Docker images, and Kubernetes deployment configuration files. You can find pre-built images from <a href="https://hub.docker.com/r/polarsquad/kubers/">Polar Squad Docker Hub</a></p>
+
+<p>ReplicaSet</p>
+
+<p>Usually one does not create pods directly but create other resources like ReplicaSet&rsquo;s which creates and manages pods.
+(This because if node fails then those pods are lost.)</p>
+
+<p>Creating ReplicaSet</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl create -f examples/replicaset.yaml
+replicaset <span style="color:#f1fa8c">&#34;kubers&#34;</span> created</code></pre></div>
+<p>Examining ReplicaSet and Pods</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl get rs
+NAME      DESIRED   CURRENT   READY     AGE
+kubers    <span style="color:#bd93f9">3</span>         <span style="color:#bd93f9">3</span>         <span style="color:#bd93f9">3</span>         55s
+
+workshop $ kubectl get pods
+NAME           READY     STATUS    RESTARTS   AGE
+kubers-2bhns   <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          1m
+kubers-xghq7   <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          1m
+kubers-zg6kb   <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          1m
+
+workshop $ kubectl get pods -o wide
+workshop $ kubectl describe pod kubers-2bhns
+workshop $ kubectl logs kubers-2bhns</code></pre></div>
+<p>Seeing what happens if pod is deleted in ReplicaSet</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl kubectl delete pod kubers-2bhns 
+
+workshop $ kubectl get pods
+NAME           READY     STATUS        RESTARTS   AGE
+kubers-2bhns   <span style="color:#bd93f9">1</span>/1       Terminating   <span style="color:#bd93f9">0</span>          5m
+kubers-cmz6z   <span style="color:#bd93f9">1</span>/1       Running       <span style="color:#bd93f9">0</span>          5s
+kubers-xghq7   <span style="color:#bd93f9">1</span>/1       Running       <span style="color:#bd93f9">0</span>          5m
+kubers-zg6kb   <span style="color:#bd93f9">1</span>/1       Running       <span style="color:#bd93f9">0</span>          5m</code></pre></div>
+<p>Horizontally scaling pods</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl scale rs kubers --replicas<span style="color:#ff79c6">=</span><span style="color:#bd93f9">10</span>
+
+workshop $ kubectl get pods
+
+workshop $ kubectl scale rs kubers --replicas<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span></code></pre></div>
+<p>ReplicaSet is controlling 3 Pods but Pods are not yet available for external use.</p>
+
+<h2 id="services">Services</h2>
+
+<p>Service is a resource created for example to make single point of entry to group of pods providing same frontend services.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl create -f examples/service.yaml
+
+workshop $ kubectl get svc</code></pre></div>
+<p>Service is not yet available to external clients. Curl fails.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ curl localhost:8080
+curl: <span style="color:#ff79c6">(</span><span style="color:#bd93f9">7</span><span style="color:#ff79c6">)</span> Failed to connect to localhost port <span style="color:#bd93f9">8080</span>: Connection refused</code></pre></div>
+<p>But service is running and you can check that requests are possible to make within cluster. Curl command is performed inside Pod towards Service. Service redirects connection to frontend Pod and http response is given back by the Pod.</p>
+
+<p>Remember to check correct IP from Services and correct Pod id:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl get pods
+
+workshop $ kubectl get services kubers
+
+workshop $ kubectl <span style="color:#8be9fd;font-style:italic">exec</span> kubers-6n4kz -- curl -s http://10.96.206.237</code></pre></div>
+<h2 id="load-balancer">Load Balancer</h2>
+
+<p>Services can be exposed to external client by using Load Balancer. LoadBalancer redirects traffic to the node port across all the nodes. Clients can connect to the service through the load balancer&rsquo;s IP.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl create -f examples/loadbalancer.yaml
+
+workshop $ kubectl get svc kubers-loadbalancer
+
+workshop $ curl localhost
+You<span style="color:#f1fa8c">&#39;ve hit pod kubers-2t9nx
+</span><span style="color:#f1fa8c">
+</span><span style="color:#f1fa8c">workshop $ curl localhost
+</span><span style="color:#f1fa8c">You&#39;</span>ve hit pod kubers-l57z4</code></pre></div>
+<p>External access through LoadBalancer should work now and when sending request to your service you should get responces from all three pods.</p>
+
+<h2 id="delete-what-we-have-created">Delete what we have created</h2>
+
+<p>Delete ReplicaSet</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl delete rs kubers
+workshop $ kubectl delete svc kubers
+workshop $ kubectl delete svc kubers-loadbalancer
+
+workshop $ kubectl get pods
+
+workshop $ kubectl get rs
+
+workshop $ kubectl get svc</code></pre></div>
+	</div>
+	
+	
+	
+		<div class="Page" id="Deployment">
+			<h1><a href="https://polarsquad.github.io/kubernetes-workshop/deployment/">Deployment</a></h1>
+			<p>Deployment</p>
+
+<p>Deployment is used for higher-level resource to deploy applications and update them declaratively.</p>
+
+<p>Creating Deployment a ReplicaSet resource is created &ldquo;underneath&rdquo;. Actual pods are created and managed by ReplicaSets not by Deployment directly.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl apply -f examples/deployment-frontend.yaml
+service <span style="color:#f1fa8c">&#34;frontend&#34;</span> created
+
+workshop $ kubectl apply -f examples/deployment-backend.yaml 
+service <span style="color:#f1fa8c">&#34;backend&#34;</span> created
+
+workshop $ kubectl get deployments
+NAME       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+backend    <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>            <span style="color:#bd93f9">1</span>           32s
+frontend   <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>         <span style="color:#bd93f9">1</span>            <span style="color:#bd93f9">1</span>           36s
+
+
+workshop $ kubectl rollout status deployment frontend
+deployment <span style="color:#f1fa8c">&#34;frontend&#34;</span> successfully rolled out
+
+workshop $ kubectl rollout status deployment backend
+deployment <span style="color:#f1fa8c">&#34;backend&#34;</span> successfully rolled out
+
+workshop $ kubectl get pods -o wide
+NAME                        READY     STATUS    RESTARTS   AGE       IP           NODE
+backend-759bc76ddc-czxlp    <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          2m        <span style="color:#bd93f9">10</span>.1.0.182   docker-for-desktop
+frontend-589b8768cf-z9x7l   <span style="color:#bd93f9">1</span>/1       Running   <span style="color:#bd93f9">0</span>          2m        <span style="color:#bd93f9">10</span>.1.0.181   docker-for-desktop
+
+workshop $ kubectl delete deployment backend
+workshop $ kubectl delete deployment frontend</code></pre></div>
+	</div>
+	
+	
+	
+		<div class="Page" id="Useful Links">
+			<h1><a href="https://polarsquad.github.io/kubernetes-workshop/useful-links/">Useful Links</a></h1>
+			<p><a href="https://kubernetes.io">The Kubernetes website</a></p>
+
+<p><a href="https://kubernetes.io/blog/">The Kubernetes Blog</a></p>
+
+<p><a href="http://slack.k8s.io">The Kubernetes community&rsquo;s Slack channel</a></p>
+
+<p><a href="https://github.com/kubernetes/kubernetes">Kubernetes source code</a></p>
+
+<p><a href="https://www.youtube.com/channel/UCvqbFHwN-nwalWPjPUKpvTA">Could Native Computing Foundation&rsquo;s Youtube channel</a></p>
+
+	</div>
+	
+	
+
+						<div class="Footer">Made with ❤️ by Polar Squad. Content on this site is licensed under a Creative Commons license</div>
+<script src="https://polarsquad.github.io/kubernetes-workshop/js/index.js"></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-xxxx-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+					</div>
+				</div>
+		</div>
+	</body>
+</html>

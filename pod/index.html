@@ -1,0 +1,154 @@
+
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Pod &middot; Kubernetes Workshop</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		
+		<meta http-equiv="content-language" content="en-us" />
+		<meta name="generator" content="Hugo 0.49.2" />
+		<link rel="stylesheet" href="https://polarsquad.github.io/kubernetes-workshop/css/index.css">
+		<link rel="shortcut icon" href="https://polarsquad.github.io/kubernetes-workshop/favicon.ico" type="image/x-icon">
+	</head>
+
+	<body>
+		<div class="Wrapper">
+			<div class="Container">
+				<div class="Header">
+  <a href="https://polarsquad.github.io/kubernetes-workshop/">
+	<div class="Title center">
+		
+		<img alt="Kubernetes Workshop Logo" src="https://static1.squarespace.com/static/5a21331232601e557c5feacb/t/5abb77bb562fa7acbffc891e/1522238007350/?format=1500w" height="140" />
+		
+		<span class="text">Kubernetes Workshop</span>
+		<span class="subtext"></span>
+	</div>
+  </a>
+</div>
+
+				<div class="Content-wrapper">
+					<div class="Sidebar">
+	<div class="Menu">
+		<div class="item">
+			<a href="https://polarsquad.github.io/kubernetes-workshop/">Home</a>
+		</div>
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/introduction/">Introduction</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/installation/">Install Kubernetes</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/pod/">Pod</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/replicaset/">ReplicaSet, Services and LoadBalancer</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/deployment/">Deployment</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/useful-links/">Useful Links</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+		
+	</div>
+</div>
+
+					<div class="Content">
+						
+	<div class="Page" id="">
+		<h1>Pod</h1>
+		<p>Pod</p>
+
+<p>Pod is a group of one or more tightly related containers that will run together on the same worker node and in the same Linux namespace(s).</p>
+
+<p>Each pod has its own IP, Hostname, processes etc. running a single application and/or additional supporting processes, each running in its own container.</p>
+
+<p>Pods are spread out on different worker nodes.</p>
+
+<p>Good practise is to have frontend and backend containers in different pods. This way utilization of your infrastructure is more efficient.</p>
+
+<p>Example pod:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#6272a4">#example pod</span>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-app
+spec:
+  containers:
+  - name: example-app
+    image: nginx:<span style="color:#bd93f9">1.7</span>.<span style="color:#bd93f9">9</span>
+    ports:
+    - containerPort: <span style="color:#bd93f9">80</span></code></pre></div>
+<p>Creating Pod from example yaml.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl create -f examples/pod.yaml
+pod <span style="color:#f1fa8c">&#34;example-app&#34;</span> created
+
+workshop $ kubectl get pods
+NAME                       READY     STATUS    RESTARTS   AGE
+example-app   <span style="color:#bd93f9">1</span>/1         Running   <span style="color:#bd93f9">0</span>          19s</code></pre></div>
+<p>Examining and Running commands inside container.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl <span style="color:#8be9fd;font-style:italic">exec</span> example-app env
+
+workshop $ kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -it example-app bash</code></pre></div>
+<p>Deleting Pod</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">workshop $ kubectl get pods
+NAME                       READY     STATUS    RESTARTS   AGE
+example-app   <span style="color:#bd93f9">1</span>/1         Running   <span style="color:#bd93f9">0</span>          19s
+
+workshop $ kubectl delete -f examples/pod.yaml
+pod <span style="color:#f1fa8c">&#34;example-app&#34;</span> deleted</code></pre></div>
+	</div>
+
+						<div class="Footer">Made with ❤️ by Polar Squad. Content on this site is licensed under a Creative Commons license</div>
+<script src="https://polarsquad.github.io/kubernetes-workshop/js/index.js"></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-xxxx-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+					</div>
+				</div>
+		</div>
+	</body>
+</html>

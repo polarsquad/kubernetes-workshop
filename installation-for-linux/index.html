@@ -1,0 +1,182 @@
+
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Installation on Linux &middot; Kubernetes Workshop</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		
+		<meta http-equiv="content-language" content="en-us" />
+		<meta name="generator" content="Hugo 0.49.2" />
+		<link rel="stylesheet" href="https://polarsquad.github.io/kubernetes-workshop/css/index.css">
+		<link rel="shortcut icon" href="https://polarsquad.github.io/kubernetes-workshop/favicon.ico" type="image/x-icon">
+	</head>
+
+	<body>
+		<div class="Wrapper">
+			<div class="Container">
+				<div class="Header">
+  <a href="https://polarsquad.github.io/kubernetes-workshop/">
+	<div class="Title center">
+		
+		<img alt="Kubernetes Workshop Logo" src="https://static1.squarespace.com/static/5a21331232601e557c5feacb/t/5abb77bb562fa7acbffc891e/1522238007350/?format=1500w" height="140" />
+		
+		<span class="text">Kubernetes Workshop</span>
+		<span class="subtext"></span>
+	</div>
+  </a>
+</div>
+
+				<div class="Content-wrapper">
+					<div class="Sidebar">
+	<div class="Menu">
+		<div class="item">
+			<a href="https://polarsquad.github.io/kubernetes-workshop/">Home</a>
+		</div>
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/introduction/">Introduction</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/installation/">Install Kubernetes</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/pod/">Pod</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/replicaset/">ReplicaSet, Services and LoadBalancer</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/deployment/">Deployment</a>
+				</div>
+			
+		
+			
+				<div class="item">
+					<a href="https://polarsquad.github.io/kubernetes-workshop/useful-links/">Useful Links</a>
+				</div>
+			
+		
+			
+		
+			
+		
+			
+		
+	</div>
+</div>
+
+					<div class="Content">
+						
+	<div class="Page" id="">
+		<h1>Installation on Linux</h1>
+		<p>If you&rsquo;re using Linux, you can use Minikube for running Kubernetes. In this guide, we&rsquo;re going to show how to run Kubernetes on top of a <a href="https://www.linux-kvm.org/page/Main_Page">KVM</a>-based virtual machine using Minikube.</p>
+
+<ol>
+<li><p>First, make sure you have Docker installed in Linux. Here&rsquo;s a list of guides for the officially supported distributions.</p>
+
+<ul>
+<li><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Ubuntu</a></li>
+<li><a href="https://docs.docker.com/install/linux/docker-ce/fedora/">Fedora</a> (for Fedora 28 you need to enable <code>test</code> repository for now)</li>
+<li><a href="https://docs.docker.com/install/linux/docker-ce/debian/">Debian</a></li>
+<li><a href="https://docs.docker.com/install/linux/docker-ce/centos/">CentOS</a></li>
+</ul></li>
+
+<li><p>If you wish to manage Docker as a non-root user, add yourself to the Docker group.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ sudo usermod -aG docker <span style="color:#ff79c6">$(</span>whoami<span style="color:#ff79c6">)</span>
+~ $ newgrp docker</code></pre></div></li>
+
+<li><p>Install KVM drivers.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#6272a4"># Debian/Ubuntu
+</span><span style="color:#6272a4"></span>~ $ sudo apt-get install libvirt-bin qemu-kvm
+<span style="color:#6272a4"># Fedora/CentOS/RHEL
+</span><span style="color:#6272a4"></span>~ $ sudo dnf install libvirt-daemon qemu-kvm libvirt-daemon-config-network</code></pre></div></li>
+
+<li><p>Add yourself to the libvirt group to manage virtual machines as a non-root user.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#6272a4"># Debian/Ubuntu
+</span><span style="color:#6272a4"></span>~ $ sudo usermod -aG libvirtd <span style="color:#ff79c6">$(</span>whoami<span style="color:#ff79c6">)</span>
+~ $ newgrp libvirtd
+<span style="color:#6272a4"># Fedora/CentOS/RHEL
+</span><span style="color:#6272a4"></span>~ $ sudo usermod -aG libvirt <span style="color:#ff79c6">$(</span>whoami<span style="color:#ff79c6">)</span>
+~ $ newgrp libvirt</code></pre></div></li>
+
+<li><p>We&rsquo;re going to download and install a few tools and make them available in the <code>$PATH</code>. This guide assumes that tools will be installed to <code>~/kubetools</code>. You can use another path if you like.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ mkdir -p ~/kubetools
+~ $ <span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">PATH</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$HOME</span><span style="color:#f1fa8c">/kubetools:</span><span style="color:#8be9fd;font-style:italic">$PATH</span><span style="color:#f1fa8c">&#34;</span></code></pre></div></li>
+
+<li><p>Install <code>kubectl</code>. It&rsquo;s used for managing and inspecting Kubernetes cluster resources.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ curl -L -o ~/kubetools/kubectl https://storage.googleapis.com/kubernetes-release/release/<span style="color:#ff79c6">$(</span>curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt<span style="color:#ff79c6">)</span>/bin/linux/amd64/kubectl
+~ $ chmod +x ~/kubetools/kubectl</code></pre></div>
+<p>Alternatively, you can follow Kubernetes&rsquo; <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">guide on installing <code>kubectl</code></a> for your distribution of choice.</p></li>
+
+<li><p>Install <code>minikube</code>. It&rsquo;s used for setting a Kubernetes cluster locally.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ curl -L -o ~/kubetools/minikube https://storage.googleapis.com/minikube/releases/v0.26.1/minikube-linux-amd64
+~ $ chmod +x ~/kubetools/minikube</code></pre></div></li>
+
+<li><p>Install KVM driver for Docker Machine. Minikube uses Docker Machine to manage the Kubernetes VM.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ curl -L -o ~/kubetools/docker-machine-driver-kvm2 https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2
+~ $ chmod +x ~/kubetools/docker-machine-driver-kvm2</code></pre></div></li>
+
+<li><p>Launch Minikube with KVM2 driver and the extra configuration shown below.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ minikube start --vm-driver<span style="color:#ff79c6">=</span>kvm2 <span style="color:#f1fa8c">\
+</span><span style="color:#f1fa8c"></span>--extra-config<span style="color:#ff79c6">=</span>controller-manager.cluster-signing-cert-file<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;/var/lib/localkube/certs/ca.crt&#34;</span> <span style="color:#f1fa8c">\
+</span><span style="color:#f1fa8c"></span>--extra-config<span style="color:#ff79c6">=</span>controller-manager.cluster-signing-key-file<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;/var/lib/localkube/certs/ca.key&#34;</span> <span style="color:#f1fa8c">\
+</span><span style="color:#f1fa8c"></span>--extra-config<span style="color:#ff79c6">=</span>apiserver.admission-control<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota&#34;</span></code></pre></div></li>
+
+<li><p>Make sure you have <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Ingress</a> add-on enabled in Minikube.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ minikube addons list | grep ingress
+– ingress: disabled
+~ $ minikube addons <span style="color:#8be9fd;font-style:italic">enable</span> ingress
+~ $ minikube addons list | grep ingress
+– ingress: enabled</code></pre></div></li>
+
+<li><p>Test Kubernetes</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ $ kubectl get nodes
+NAME       STATUS    ROLES     AGE       VERSION
+minikube   Ready     master    53m       v1.10.0</code></pre></div></li>
+</ol>
+
+<p>Awesome! You&rsquo;re now running Kubernetes on your Linux.</p>
+
+	</div>
+
+						<div class="Footer">Made with ❤️ by Polar Squad. Content on this site is licensed under a Creative Commons license</div>
+<script src="https://polarsquad.github.io/kubernetes-workshop/js/index.js"></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-xxxx-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+					</div>
+				</div>
+		</div>
+	</body>
+</html>

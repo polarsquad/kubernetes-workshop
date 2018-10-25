@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes Workshop</title>
+    <link>https://polarsquad.github.io/kubernetes-workshop/</link>
+    <description>Recent content on Kubernetes Workshop</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Made with ❤️ by Polar Squad. Content on this site is licensed under a Creative Commons license</copyright>
+    
+	<atom:link href="https://polarsquad.github.io/kubernetes-workshop/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Introduction</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/introduction/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/introduction/</guid>
+      <description>This Kubernetes workshop goal is to teach reader basics of Kubernetes and how you can use it.
+Start by cloning the workshop material
+git clone https://github.</description>
+    </item>
+    
+    <item>
+      <title>Install Kubernetes</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/installation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/installation/</guid>
+      <description>We will start installing Kubernetes. There&amp;rsquo;s multiple ways to run Kubernetes, select what suites best for you.</description>
+    </item>
+    
+    <item>
+      <title>Install with Docker for Mac with Kubernetes</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/install-docker-for-mac/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/install-docker-for-mac/</guid>
+      <description>If you&amp;rsquo;re using Docker for Mac, the installation is easy.
+ Install Edge version of Docker for Mac from here
+ Turn on experimental Kubernetes support
+ Click Docker icon at top right corner
+ Click Preferences
+ Select Kubernetes tab
+ Select Enable Kubernetes
+ Click Apply
+  Wait until installation completes!
+ Test Kubernetes
+~ $ kubectl get nodes NAME STATUS ROLES AGE VERSION docker-for-desktop Ready master 3m v1.</description>
+    </item>
+    
+    <item>
+      <title>Installation on Linux</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/installation-for-linux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/installation-for-linux/</guid>
+      <description>If you&amp;rsquo;re using Linux, you can use Minikube for running Kubernetes. In this guide, we&amp;rsquo;re going to show how to run Kubernetes on top of a KVM-based virtual machine using Minikube.
+ First, make sure you have Docker installed in Linux. Here&amp;rsquo;s a list of guides for the officially supported distributions.
+ Ubuntu Fedora (for Fedora 28 you need to enable test repository for now) Debian CentOS  If you wish to manage Docker as a non-root user, add yourself to the Docker group.</description>
+    </item>
+    
+    <item>
+      <title>Pod</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/pod/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/pod/</guid>
+      <description>Pod
+Pod is a group of one or more tightly related containers that will run together on the same worker node and in the same Linux namespace(s).
+Each pod has its own IP, Hostname, processes etc. running a single application and/or additional supporting processes, each running in its own container.
+Pods are spread out on different worker nodes.
+Good practise is to have frontend and backend containers in different pods. This way utilization of your infrastructure is more efficient.</description>
+    </item>
+    
+    <item>
+      <title>ReplicaSet, Services and LoadBalancer</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/replicaset/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/replicaset/</guid>
+      <description>In this example we have Node.js web application which accept&amp;rsquo;s HTTP requests and responses with the hostname of the machine it is running in.
+The directory apps/kubers/ in the workshop Git repo contains the Node.JS source code for the apps, Dockerfile to build the Docker images, and Kubernetes deployment configuration files. You can find pre-built images from Polar Squad Docker Hub
+ReplicaSet
+Usually one does not create pods directly but create other resources like ReplicaSet&amp;rsquo;s which creates and manages pods.</description>
+    </item>
+    
+    <item>
+      <title>Deployment</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/deployment/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/deployment/</guid>
+      <description>Deployment
+Deployment is used for higher-level resource to deploy applications and update them declaratively.
+Creating Deployment a ReplicaSet resource is created &amp;ldquo;underneath&amp;rdquo;. Actual pods are created and managed by ReplicaSets not by Deployment directly.
+workshop $ kubectl apply -f examples/deployment-frontend.yaml service &amp;#34;frontend&amp;#34; created workshop $ kubectl apply -f examples/deployment-backend.yaml service &amp;#34;backend&amp;#34; created workshop $ kubectl get deployments NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE backend 1 1 1 1 32s frontend 1 1 1 1 36s workshop $ kubectl rollout status deployment frontend deployment &amp;#34;frontend&amp;#34; successfully rolled out workshop $ kubectl rollout status deployment backend deployment &amp;#34;backend&amp;#34; successfully rolled out workshop $ kubectl get pods -o wide NAME READY STATUS RESTARTS AGE IP NODE backend-759bc76ddc-czxlp 1/1 Running 0 2m 10.</description>
+    </item>
+    
+    <item>
+      <title>Useful Links</title>
+      <link>https://polarsquad.github.io/kubernetes-workshop/useful-links/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://polarsquad.github.io/kubernetes-workshop/useful-links/</guid>
+      <description>The Kubernetes website
+The Kubernetes Blog
+The Kubernetes community&amp;rsquo;s Slack channel
+Kubernetes source code
+Could Native Computing Foundation&amp;rsquo;s Youtube channel</description>
+    </item>
+    
+  </channel>
+</rss>
