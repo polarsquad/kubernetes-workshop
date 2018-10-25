@@ -1,0 +1,40 @@
+
+# This is demo cluster so give all authenticated people 'edit' rights in all namespaces
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin:all
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+# Anyone who is authenticated
+- kind: Group
+  name: system:authenticated
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: create-namespaces
+rules:
+  - apiGroups: [""]
+    resources:
+    - namespaces
+    verbs: ["*"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: all:smartly.io
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: create-namespaces
+subjects:
+# Anyone who is authenticated
+- kind: Group
+  name: system:authenticated
